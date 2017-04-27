@@ -15,6 +15,7 @@ const int LPWM_R = 11;
 const int L_EN_R = 12;
 const int R_EN_R = 13;
 
+const int m_factor = 2;
 Motor* m_motor_l;
 Motor* m_motor_r;
 
@@ -40,12 +41,10 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-Serial.println(analogRead(X_pin));
+  Serial.println(analogRead(X_pin));
   Serial.println(analogRead(Y_pin));
-  int axis_x = map(analogRead(X_pin), 0, 1023, 0, 255) - 128; // adjusted to calibrate joystick slightly (joystick a bit out of whack)
-  int axis_y = map(analogRead(Y_pin), 0, 1023, 0, 255) - 128;
-  //servo1.write(joyVal);
-  delay(50);
+  int axis_x = map(analogRead(X_pin), 0, 1023, 0, 255) - 127; // adjusted to calibrate joystick slightly (joystick a bit out of whack)
+  int axis_y = map(analogRead(Y_pin), 0, 1023, 0, 255) - 127;
       
   if (abs(axis_x) < threshold) {
     axis_x = 0;
@@ -74,8 +73,8 @@ Serial.println(analogRead(X_pin));
     }
   }
   
-  m_motor_l->applyThrust(m_left_thrust);
-  m_motor_r->applyThrust(m_right_thrust);
+  m_motor_l->applyThrust(constrain(m_left_thrust * m_factor, -255, 255));
+  m_motor_r->applyThrust(constrain(m_right_thrust * m_factor, -255, 255));
   
   Serial.print("Mag: ");
   Serial.print(mag);
@@ -87,14 +86,7 @@ Serial.println(analogRead(X_pin));
   Serial.print(axis_x);
   Serial.print("  y: ");
   Serial.println(axis_y);
-  delay(500);
-}
-
-int joystickMixingHack(int thrust){
-  if (thrust > 128) {
-    return 128 - (thrust - 128);
-  }
-  return thrust;
+  delay(50);
 }
 
 int getMagnitude(int x, int y){
