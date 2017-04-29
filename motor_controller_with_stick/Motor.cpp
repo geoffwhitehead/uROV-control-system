@@ -23,8 +23,6 @@ Motor::Motor(int RPWM, int LPWM, int L_EN, int R_EN){
 } 
 
 void Motor::applyThrust(int thrust){
-  Serial.print("thrust: ");
-  Serial.println(thrust);
   if (thrust < 0) {
     analogWrite(m_RPWM, 0);
     analogWrite(m_LPWM, abs(thrust));
