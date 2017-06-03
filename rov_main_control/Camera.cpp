@@ -11,7 +11,7 @@ Camera::Camera(int pin_servo_tilt, int pin_servo_pan){
 
 void Camera::update(){
   if(!viewApplied){
-    this.updateCamPosition();
+    updateCamPosition();
     viewApplied = true;
   }
 }
@@ -22,7 +22,7 @@ void Camera::passUserInput(int x, int y){
   viewApplied = false;
 }
 
-void Camera::updateCamPos(){
+void Camera::updateCamPosition(){
   m_pan.write(m_pan.read() + ((m_x - offset) * scalingFactor));
   m_tilt.write(m_tilt.read() + ((m_y - offset) * scalingFactor));
 }

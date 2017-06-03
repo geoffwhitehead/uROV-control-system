@@ -5,7 +5,6 @@
 #include "Thruster.h"
 
 Thruster::Thruster(int RPWM, int LPWM, int L_EN, int R_EN){
-  
   pinMode(RPWM, OUTPUT);
   pinMode(LPWM, OUTPUT);
   pinMode(L_EN, OUTPUT);

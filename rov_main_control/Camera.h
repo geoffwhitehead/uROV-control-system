@@ -2,13 +2,13 @@
 #define Camera_h
 
 #include "Arduino.h"
-#include <Servo.h>
+#include "Component.h"
+#include "Servo.h"
 
-class Camera {
+class Camera: public Component {
   public:
-
     Camera(int servo_tilt, int servo_pan);
-    void updateCamPos();
+    void updateCamPosition();
     void update();
     void passUserInput(int x, int y);
     

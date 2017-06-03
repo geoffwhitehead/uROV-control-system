@@ -2,6 +2,8 @@
   ThrusterControl.cpp - Class for controlling ROV thrusters
 */
 
+#include "ThrusterControl.h"
+
 ThrusterControl::ThrusterControl(){
     m_thrusterL = new Thruster(3,4,46,47);
     m_thrusterR = new Thruster(5,6,28,29);
@@ -16,11 +18,11 @@ ThrusterControl::ThrusterControl(){
 
 void ThrusterControl::update(){
   if(!headingApplied){
-    this.adjustHeading();
+    adjustHeading();
     headingApplied = true;
   }
   if(!depthApplied){
-    this.adjustDepth();
+    adjustDepth();
     depthApplied = true;
   }
   
@@ -36,17 +38,17 @@ void ThrusterControl::passUserInput(int x, int y, int z, int rot){
   depthApplied = false;
 }
 
-int ThrusterControl::checkThreshold(int thrust){
+int ThrusterControl::adjustToThreshold(int thrust){
   if(abs(thrust) < m_threshold) {
     return 0;
   }
+  return thrust;
 }
 
 void ThrusterControl::adjustHeading(){
-
-  int x = checkThreshold(m_x);
-  int y = checkThreshold(m_y);
-  int rot = checkThreshold(m_rot);
+  int x = adjustToThreshold(m_x);
+  int y = adjustToThreshold(m_y);
+  int rot = adjustToThreshold(m_rot);
   int thrustL;
   int thrustR;
   int thrustLat;
@@ -74,6 +76,13 @@ void ThrusterControl::adjustHeading(){
 
 //TODO finish this function  - need to work out how to reservse direction on brushless motor
 void ThrusterControl::adjustDepth(){
-  int val = map(z, 0, 254, 1000, 2000);
+  int val = map(m_z, 0, 254, 1000, 2000);
   m_thrusterVert->applyThrust(val); 
+}
+
+ThrusterControl::~ThrusterControl() {
+	delete(m_thrusterL);
+	delete(m_thrusterR);
+	delete(m_thrusterLat);
+	delete(m_thrusterVert);
 }
